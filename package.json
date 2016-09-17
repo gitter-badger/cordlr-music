@@ -1,0 +1,26 @@
+{
+  "name": "chordlr",
+  "version": "0.0.1",
+  "description": "A music plugin for cordlr",
+  "main": "app.js",
+  "scripts": {
+    "test": "eslint src/ test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mees-/chordlr.git"
+  },
+  "keywords": [
+    "chordlr",
+    "music",
+    "cordlr",
+    "plugin",
+    "bot"
+  ],
+  "author": "Mees van Dijk <mees@itisme.es>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mees-/chordlr/issues"
+  },
+  "homepage": "https://github.com/mees-/chordlr#readme"
+}
