@@ -2,9 +2,9 @@
   "name": "chordlr",
   "version": "0.0.1",
   "description": "A music plugin for cordlr",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "eslint src/ test/"
+    "test": "eslint src/"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,14 @@
   "bugs": {
     "url": "https://github.com/mees-/chordlr/issues"
   },
-  "homepage": "https://github.com/mees-/chordlr#readme"
+  "homepage": "https://github.com/mees-/chordlr#readme",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "redux": "^3.6.0",
+    "ytdl-core": "^0.7.18"
+  },
+  "devDependencies": {
+    "eslint": "^3.5.0",
+    "eslint-config-mees": "^1.1.3"
+  }
 }
