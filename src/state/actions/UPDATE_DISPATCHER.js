@@ -1,12 +1,12 @@
-module.exports = class updateDispatcher {
-  constructor(dispatcher) {
-    this.type = 'UPDATE_DISPATCHER'
-    this.dispatcher = dispatcher
+module.exports = function UPDATE_DISPATCHER(dispatcher) {
+  return {
+    type: 'UPDATE_DISPATCHER',
+    dispatcher
   }
+}
 
-  static reduce(rState, action) {
-    const state = Object.assign({}, rState)
-    state.dispatcher = action.dispatcher
-    return state
-  }
+exports.reduce = function reduce(rState, action) {
+  const state = Object.assign({}, rState)
+  state.dispatcher = action.dispatcher
+  return state
 }

@@ -14,7 +14,7 @@ module.exports = (bot) => {
 
   // release listener
   log('releasing listener')
-  return listener.bind(null, bot, store)
+  return listener.bind(null, store)
 }
 
 // TODO move this to separate config file

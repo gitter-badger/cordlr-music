@@ -1,13 +1,12 @@
-module.exports = class updateVoiceConnection {
-  constructor(channelId, voiceConnection) {
-    this.type = 'UPDATE_VOICE_CONNECTION'
-    this.channelId = channelId
-    this.voiceConnection = voiceConnection
+module.exports = function UPDATE_VOICE_CONNECTION(connection) {
+  return {
+    type: 'UPDATE_VOICE_CONNECTION',
+    connection
   }
+}
 
-  static reduce(rState, action) {
-    const state = Object.assign({}, rState)
-    state.voiceConnections.set(action.channelId, action.voiceConnection)
-    return state
-  }
+exports.reduce = function reduce(rState, action) {
+  const state = Object.assign({}, rState)
+  state.voiceConnections.set(action.channelId, action.connection)
+  return state
 }

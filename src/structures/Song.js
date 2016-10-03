@@ -10,7 +10,7 @@ module.exports = class Song {
     this.addedBy = addedBy
 
     // store the stream here
-    this.stream = null
+    this._stream = null
   }
 
   formatLength() {
@@ -18,11 +18,11 @@ module.exports = class Song {
   }
 
   get stream() {
-    if (this.stream === null) {
-      this.stream = ytdl(this.url, { format: 'audioonly' })
+    if (this._stream === null) {
+      this._stream = ytdl(this.url, { format: 'audioonly' })
     }
 
-    return this.stream
+    return this._stream
   }
 
   //  export with Song and wrap in promise
