@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "eslint": "^3.5.0",
-    "eslint-config-mees": "^1.1.3"
+    "eslint-config-mees": "^1.1.8"
   }
 }
