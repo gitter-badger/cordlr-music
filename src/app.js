@@ -1,20 +1,10 @@
-const { createStore } = require('redux')
 const log = require('debug')('chordlr:main')
-const reducer = require('./state/reducer')
-const subscriber = require('./state/subscriber')
 const listener = require('./listener')
 
-
-module.exports = (bot) => {
-  // create store
-  const store = createStore(reducer)
-
-  // add subscriber
-  store.subscribe(subscriber.bind(null, bot, store))
-
+module.exports = (client) => {
   // release listener
   log('releasing listener')
-  return listener.bind(null, store)
+  return listener.bind(null, client)
 }
 
 // TODO move this to separate config file

@@ -5,7 +5,6 @@
   },
   "extends": ["mees"],
   "rules": {
-    "global-require": "off",
     "semi": ["error", "never"]
   }
 }

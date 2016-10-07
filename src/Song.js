@@ -1,9 +1,11 @@
 const ytdl = require('ytdl-core')
-const log = require('debug')('chordlr:Song')
+const createLogger = require('debug')
 
 module.exports = class Song {
-  constructor(url, title, lengthSeconds, addedBy) {
-    log(`new Song: ${ title }`)
+  constructor({ url, title, lengthSeconds }, addedBy) {
+    this.log = createLogger(`chordlr:Song:${ this.title }`)
+
+    this.log('created')
     this.url = url
     this.title = title
     this.lengthSecconds = lengthSeconds
@@ -19,6 +21,7 @@ module.exports = class Song {
 
   get stream() {
     if (this._stream === null) {
+      this.log('created stream')
       this._stream = ytdl(this.url, { format: 'audioonly' })
     }
 
