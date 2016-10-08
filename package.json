@@ -1,5 +1,5 @@
 {
-  "name": "chordlr",
+  "name": "cordlr-chordlr",
   "version": "0.0.1",
   "description": "A music plugin for cordlr",
   "main": "src/app.js",
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/mees-/chordlr#readme",
   "dependencies": {
     "debug": "^2.2.0",
-    "redux": "^3.6.0",
     "ytdl-core": "^0.7.18"
   },
   "devDependencies": {
