@@ -2,8 +2,8 @@ const ytdl = require('ytdl-core')
 const createLogger = require('debug')
 
 module.exports = class Song {
-  constructor(url, { title, lengthSeconds }, addedBy) {
-    this.log = createLogger(`cordlr-music:Song:${ this.title }`)
+  constructor(url, { title, length_seconds: lengthSeconds }, addedBy) {
+    this.log = createLogger(`cordlr-music:Song:${ title }`)
 
     this.log('created')
     this.url = url

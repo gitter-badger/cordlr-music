@@ -8,6 +8,8 @@ const defaultOptions = {
 
 module.exports = class musicManager extends EventEmitter {
   constructor(connection, { maxHistory, autoPlay } = defaultOptions) {
+    // init super
+    super()
     // store the arguments
     this._connection = connection
     this.options = {
@@ -16,17 +18,25 @@ module.exports = class musicManager extends EventEmitter {
     }
 
     // create the internal logger with a name according to the voiceChannel's name
-    this.log = createLogger(`cordlr-music:musicManager:${ this._connection.channel.name }`)
+    const guildName = this._connection.channel.guild.name
+    const channelName = this._connection.channel.name
+    this.log = createLogger(`cordlr-music:musicManager:${ guildName }:${ channelName }`)
     // set interal properties
     this.queue = []
     this.history = []
 
-    this.initEventRouter()
+    this.init()
   }
 
   // create the router for events, the manager can only be controlled by events
-  initEventRouter() {
-    this.log('initEventRouter')
+  init() {
+    this.log('initializing')
+    // kill manager on disconnect
+    this._connection.on('disconnected', this.kill)
+
+    // // // // // //  // // // // // //
+    //             Events             //
+    // // // // // //  // // // // // //
 
     // new song
     this.on('new song', (song, index = this.queue.length) => {
@@ -42,13 +52,14 @@ module.exports = class musicManager extends EventEmitter {
     })
 
     // start playing song
-    this.on('start song', (song = this.queue[0]) => {
+    this.on('start song', (index = 0) => {
+      const song = this.queue[index]
       this.log('start', song.title)
       if (this._boundDispatcher) {
         this._boundDispatcher.end()
       }
       const dispatcher = this._connection.playStream(song.stream)
-      this.initBinds(dispatcher)
+      this.bind(dispatcher)
     })
 
     // pause/unpause
@@ -57,10 +68,10 @@ module.exports = class musicManager extends EventEmitter {
         this._boundDispatcher._setPaused(state)
       } catch (e) {
         this.log('error with state, expected bound dispatcher but none was found')
-        // TODO handle differently
-        throw e
+        // TODO handle error
       }
     })
+
     // end song
     this.on('song end', () => this.emit('next song'))
 
@@ -72,6 +83,7 @@ module.exports = class musicManager extends EventEmitter {
     // kill the musicManager
     this.on('kill', () => {
       this._boundDispatcher.end()
+      this.log('killed')
     })
 
     // if autoPlay, emit start when song ends
@@ -80,13 +92,14 @@ module.exports = class musicManager extends EventEmitter {
     }
   }
 
-  // bind connection events to manager events
-  initBinds(dispatcher = this.dispatcher) {
-    this._boundDispatcher = dispatcher
-    this.log('initBinds')
+  // bind dispatcher events to manager events
+  bind(dispatcher = this.dispatcher) {
+    this.log('bind')
     dispatcher.on('error', (e) => this.emit('error', e))
     dispatcher.on('end', () => this.emit('dispatcher end'))
     dispatcher.on('speaking', (state) => this.emit('speaking', state))
+
+    this._boundDispatcher = dispatcher
   }
 
   // convenient alias
@@ -95,14 +108,16 @@ module.exports = class musicManager extends EventEmitter {
     return this._connection.player.dispatcher
   }
 
-  get pause() {
-    return this.dispatcher.pause
+  // forward pause and resume
+  pause() {
+    this.emit('pause', true)
   }
 
-  get resume() {
-    return this.dispatcher.resume
+  resume() {
+    this.emit('pause', false)
   }
 
+  // shortcut methods, because emiting events looks ugly
   addSong() {
     this.emit('new song', ...arguments)
   }
@@ -115,6 +130,10 @@ module.exports = class musicManager extends EventEmitter {
   }
 
   start() {
-    this.emit('start song')
+    this.emit('start song', ...arguments)
+  }
+
+  kill() {
+    this.emit('kill')
   }
 }

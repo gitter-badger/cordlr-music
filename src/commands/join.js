@@ -1,4 +1,5 @@
 const MusicManager = require('../musicManager')
+const log = require('debug')('cordlr-music:command:join')
 
 module.exports = {
   name: 'join',
@@ -8,10 +9,11 @@ module.exports = {
     const voiceChannel = message.guild.channels
     .findAll('type', 'voice')
     .find((elem) => elem.members.exists((value) => value.user.equals(message.author)))
+    log(`joining ${ voiceChannel.guild.name }:${ voiceChannel.name }`)
     return voiceChannel.join()
       .then((connection) => {
         // attach MusicManager
-        connection.channel.musicManager = new MusicManager(connection)
+        connection.musicManager = new MusicManager(connection)
       })
   }
 }
