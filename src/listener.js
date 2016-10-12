@@ -1,10 +1,10 @@
 const commands = require('./commands')
-const log = require('debug')('chordlr:listener')
+const log = require('debug')('cordlr-music:listener')
 
-module.exports = (client, message, args) => {
-  log(`recevied message: ${ message }`)
+module.exports = (message, args) => {
+  log('received message:', message)
 
-  if (commands.has(args[1])) {
-    return commands.get(args[1]).run(message)
+  if (commands.has(args._[1])) {
+    return commands.get(args._[1]).run(message, args)
   }
 }

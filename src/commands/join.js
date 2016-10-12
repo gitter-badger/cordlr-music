@@ -1,3 +1,5 @@
+const MusicManager = require('../musicManager')
+
 module.exports = {
   name: 'join',
   usage: 'join <channel name> (if none is specified, join person who issued command)',
@@ -7,5 +9,9 @@ module.exports = {
     .findAll('type', 'voice')
     .find((elem) => elem.members.exists((value) => value.user.equals(message.author)))
     return voiceChannel.join()
+      .then((connection) => {
+        // attach MusicManager
+        connection.channel.musicManager = new MusicManager(connection)
+      })
   }
 }

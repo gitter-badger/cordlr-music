@@ -1,12 +1,11 @@
-const log = require('debug')('chordlr:main')
+const log = require('debug')('cordlr-music:app')
 const listener = require('./listener')
 
-module.exports = (client) => {
+module.exports = () => {
   // release listener
   log('releasing listener')
-  return listener.bind(null, client)
+  return listener
 }
 
-// TODO move this to separate config file
 exports.command = 'music'
 exports.usage = 'music <method> [params...]'
