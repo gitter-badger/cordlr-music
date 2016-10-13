@@ -1,5 +1,5 @@
 const EventEmitter = require('events')
-const createLogger = require('debug')
+const log = require('debug')('cordlr-music:musicManager')
 
 const defaultOptions = {
   maxHistory: 100,
@@ -17,10 +17,6 @@ module.exports = class musicManager extends EventEmitter {
       autoPlay
     }
 
-    // create the internal logger with a name according to the voiceChannel's name
-    const guildName = this._connection.channel.guild.name
-    const channelName = this._connection.channel.name
-    this.log = createLogger(`cordlr-music:musicManager:${ guildName }:${ channelName }`)
     // set interal properties
     this.queue = []
     this.history = []
@@ -30,110 +26,77 @@ module.exports = class musicManager extends EventEmitter {
 
   // create the router for events, the manager can only be controlled by events
   init() {
-    this.log('initializing')
-    // kill manager on disconnect
-    this._connection.on('disconnected', this.kill)
+    log(`${ this._connection.channel.guild.name }  init`)
 
-    // // // // // //  // // // // // //
-    //             Events             //
-    // // // // // //  // // // // // //
-
-    // new song
-    this.on('new song', (song, index = this.queue.length) => {
-      this.log(`new song: ${ song.title }`)
-      this.queue.splice(index, 0, song)
+    // song end
+    this.on('song end', () => {
+      log(`${ this._connection.channel.guild.name }:song end:${ this.queue[0].title }`)
+      this.next()
     })
-
-    // next song
-    this.on('next song', () => {
-      this.log('next song')
-      this.history.unshift(this.queue.shift())
-      this.history.slice(0, this.options.maxHistory)
-    })
-
-    // start playing song
-    this.on('start song', (index = 0) => {
-      const song = this.queue[index]
-      this.log('start', song.title)
-      if (this._boundDispatcher) {
-        this._boundDispatcher.end()
-      }
-      const dispatcher = this._connection.playStream(song.stream)
-      this.bind(dispatcher)
-    })
-
-    // pause/unpause
-    this.on('pause', (state) => {
-      try {
-        this._boundDispatcher._setPaused(state)
-      } catch (e) {
-        this.log('error with state, expected bound dispatcher but none was found')
-        // TODO handle error
-      }
-    })
-
-    // end song
-    this.on('song end', () => this.emit('next song'))
 
     // stream end in dispatcher
     this.on('dispatcher end', () => {
       this._boundDispatcher = null
+      this.emit('song end')
     })
 
-    // kill the musicManager
-    this.on('kill', () => {
-      this._boundDispatcher.end()
-      this.log('killed')
-    })
-
-    // if autoPlay, emit start when song ends
+    // if autoPlay, start when song ends
     if (this.options.autoPlay) {
-      this.on('song end', () => this.emit('start'))
+      this.on('song end', () => this.start())
     }
   }
 
   // bind dispatcher events to manager events
   bind(dispatcher = this.dispatcher) {
-    this.log('bind')
-    dispatcher.on('error', (e) => this.emit('error', e))
+    log(`${ this._connection.channel.guild.name }:bind`)
+    dispatcher.on('error', e => this.emit('error', e))
     dispatcher.on('end', () => this.emit('dispatcher end'))
-    dispatcher.on('speaking', (state) => this.emit('speaking', state))
+    dispatcher.on('speaking', state => this.emit('speaking', state))
 
     this._boundDispatcher = dispatcher
   }
 
-  // convenient alias
-  get dispatcher() {
-    if (!this._connection.player.dispatcher) this.log('dispatcher is undefined, but it was accessed')
-    return this._connection.player.dispatcher
-  }
-
-  // forward pause and resume
   pause() {
-    this.emit('pause', true)
+    this._boundDispatcher._setPaused(true)
   }
 
   resume() {
-    this.emit('pause', false)
+    this._boundDispatcher._setPaused(false)
   }
 
-  // shortcut methods, because emiting events looks ugly
-  addSong() {
-    this.emit('new song', ...arguments)
+  addSong(song, index = this.queue.length) {
+    this.queue.splice(index, 0, song)
   }
 
   next(amount = 1) {
-    this.emit('song end')
+    this.stop()
     for (let i = 0; i < amount; i++) {
+      log(`${ this._connection.channel.guild.name }:next`)
       this.history.unshift(this.queue.shift())
     }
   }
 
   start() {
-    this.emit('start song', ...arguments)
+    const song = this.queue[0]
+    log(`${ this._connection.channel.guild.name }:start ${ song.title }`)
+    if (this._boundDispatcher) {
+      this.stop()
+    }
+    this.emit('start', song)
+    const stream = song.getStream()
+    const dispatcher = this._connection.playStream(stream)
+    stream.on('error', (err) => {
+      dispatcher.end() // manually end dispatcher to avoid interference with a possible next stream
+      log(`${ this._connection.channel.guild.name }:encountered error on stream`, err)
+    })
+    this.bind(dispatcher)
+    song.commandChannel.sendMessage(`started playing ${ song.title }`)
   }
 
-  kill() {
-    this.emit('kill')
+  stop() {
+    if (this._boundDispatcher) {
+      this.emit('stop')
+      this._boundDispatcher.end()
+    }
   }
 }

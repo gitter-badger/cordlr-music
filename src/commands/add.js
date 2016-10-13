@@ -8,9 +8,9 @@ module.exports = {
   run(message, args) {
     return Song.getInfo(args[1])
       .then((info) => {
-        const musicManager = message.client.voiceConnections.find(((connection) =>
+        const musicManager = message.client.voiceConnections.find((connection =>
           connection.channel.guild.id === message.channel.guild.id)).musicManager
-        const song = new Song(args[1], info, message.author)
+        const song = new Song(args[1], info, message.author, message.channel)
         musicManager.addSong(song, args[2])
         message.reply('added!')
       })

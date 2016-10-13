@@ -1,31 +1,25 @@
 const ytdl = require('ytdl-core')
-const createLogger = require('debug')
+const log = require('debug')('cordlr-music:')
 
 module.exports = class Song {
-  constructor(url, { title, length_seconds: lengthSeconds }, addedBy) {
-    this.log = createLogger(`cordlr-music:Song:${ title }`)
-
-    this.log('created')
+  constructor(url, { title, length_seconds: lengthSeconds }, addedBy, commandChannel) {
+    log(`created ${ title }`)
     this.url = url
     this.title = title
     this.lengthSecconds = lengthSeconds
     this.addedBy = addedBy
-
-    // store the stream here
-    this._stream = null
+    this.commandChannel = commandChannel
   }
 
   formatLength() {
     return `${ Math.floor(this.lengthSeconds / 60) }:${ this.lengthSeconds % 60 }`
   }
 
-  get stream() {
-    if (this._stream === null) {
-      this.log('created stream')
-      this._stream = ytdl(this.url, { format: 'audioonly' })
-    }
+  getStream() {
+    log('created stream')
+    const stream = ytdl(this.url, { format: 'audioonly' })
 
-    return this._stream
+    return stream
   }
 
   //  export with Song and wrap in promise

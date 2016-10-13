@@ -5,19 +5,12 @@ module.exports = {
   usage: 'queue <startAt>',
 
   run(message, args) {
-    args[1] = Number(args[1])
-    if (isNaN(args[1])) {
-      args[1] = 0
-    }
     log('queue:', args[1])
-    let manager
-    try {
-      manager = message.guild.voiceConnection.musicManager
-    } catch (e) {
-      message.reply('Im not in a voice channel')
+    if (!message.guild.voiceConnection) {
+      return message.reply('I\'m not in a voice channel')
     }
-    const queueString = formatQueue(manager.queue, args[1])
-    message.reply(queueString)
+    const queueArr = formatQueue(message.guild.voiceConnection.musicManager.queue)
+    message.reply(queueArr, { split: true })
   }
 }
 
@@ -26,7 +19,7 @@ function formatQueue(queue, startAtIndex = 0) {
   let index = startAtIndex
   while (lines.join('\n').length < 2000 && index < queue.length) { // discord has a 2000 char limit
     const song = queue[index]
-    lines.push(`${ index + 1 }.\t${ song.title }`)
+    lines.push(`${ index }.\t${ song.title }`)
     index++
   }
 
@@ -35,5 +28,5 @@ function formatQueue(queue, startAtIndex = 0) {
     lines.splice(-1, 1) // remove last item
   }
 
-  return lines.join('\n')
+  return lines
 }
