@@ -1,4 +1,5 @@
 const log = require('debug')('cordlr-music:command:queue')
+const { notInVoiceChannel } = require('../messages')
 
 module.exports = {
   name: 'queue',
@@ -7,7 +8,7 @@ module.exports = {
   run(message, args) {
     log('queue:', args[1])
     if (!message.guild.voiceConnection) {
-      return message.reply('I\'m not in a voice channel')
+      return message.reply(notInVoiceChannel())
     }
     const queueArr = formatQueue(message.guild.voiceConnection.musicManager.queue)
     message.reply(queueArr, { split: true })
@@ -17,15 +18,10 @@ module.exports = {
 function formatQueue(queue, startAtIndex = 0) {
   const lines = ['Queue:\n']
   let index = startAtIndex
-  while (lines.join('\n').length < 2000 && index < queue.length) { // discord has a 2000 char limit
+  for (let i = index; i < queue.length; i++) {
     const song = queue[index]
     lines.push(`${ index }.\t${ song.title }`)
     index++
-  }
-
-  if (lines.join('\n').length > 2000) {
-    log('removing last item')
-    lines.splice(-1, 1) // remove last item
   }
 
   return lines

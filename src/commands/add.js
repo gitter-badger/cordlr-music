@@ -1,5 +1,6 @@
 const Song = require('../Song')
 const log = require('debug')('cordlr-music:command:add')
+const { addedSong, errorAddedSong } = require('../messages')
 
 module.exports = {
   name: 'add',
@@ -12,11 +13,11 @@ module.exports = {
           connection.channel.guild.id === message.channel.guild.id)).musicManager
         const song = new Song(args[1], info, message.author, message.channel)
         musicManager.addSong(song, args[2])
-        message.reply('added!')
+        message.reply(addedSong(song.title))
       })
       .catch((err) => {
         log(err)
-        message.reply('error getting song info')
+        message.reply(errorAddedSong())
       })
   }
 }

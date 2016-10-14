@@ -2,11 +2,12 @@ const ytdl = require('ytdl-core')
 const log = require('debug')('cordlr-music:')
 
 module.exports = class Song {
-  constructor(url, { title, length_seconds: lengthSeconds }, addedBy, commandChannel) {
-    log(`created ${ title }`)
+  constructor(url, info, addedBy, commandChannel) {
+    log(`created ${ info.title }`)
     this.url = url
-    this.title = title
-    this.lengthSecconds = lengthSeconds
+    this.title = info.title
+    this.lengthSecconds = info.length_seconds
+    this._info = info
     this.addedBy = addedBy
     this.commandChannel = commandChannel
   }
@@ -17,7 +18,7 @@ module.exports = class Song {
 
   getStream() {
     log('created stream')
-    const stream = ytdl(this.url, { format: 'audioonly' })
+    const stream = ytdl.downloadFromInfo(this._info, { format: 'audioonly' })
 
     return stream
   }

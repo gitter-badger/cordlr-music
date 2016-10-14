@@ -1,12 +1,11 @@
-// add new commands manually here
-const join = require('./commands/join')
-const add = require('./commands/add')
-const start = require('./commands/start')
-const queue = require('./commands/queue')
+const { readdirSync } = require('fs')
+const { join } = require('path')
+
+const commandDir = 'commands'
 
 const commands = module.exports = new Map()
 
-commands.set('join', join)
-commands.set('add', add)
-commands.set('start', start)
-commands.set('queue', queue)
+readdirSync(join(__dirname, commandDir))
+  .filter(file => (/\w+\.js/).test(file))
+  .map(file => require(join(__dirname, commandDir, file)))
+  .forEach(command => commands.set(command.name, command))

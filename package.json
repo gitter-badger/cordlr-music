@@ -11,10 +11,10 @@
     "url": "git+https://github.com/mees-/chordlr.git"
   },
   "keywords": [
-    "chordlr",
-    "music",
     "cordlr",
-    "plugin",
+    "cordlr-plugin",
+    "music",
+    "cordlr-music",
     "bot"
   ],
   "author": "Mees van Dijk <mees@itisme.es>",

@@ -1,9 +1,11 @@
 const EventEmitter = require('events')
 const log = require('debug')('cordlr-music:musicManager')
+const { nowPlaying } = require('./messages')
 
 const defaultOptions = {
   maxHistory: 100,
-  autoPlay: true
+  autoPlay: true,
+  volume: 1
 }
 
 module.exports = class musicManager extends EventEmitter {
@@ -31,7 +33,6 @@ module.exports = class musicManager extends EventEmitter {
     // song end
     this.on('song end', () => {
       log(`${ this._connection.channel.guild.name }:song end:${ this.queue[0].title }`)
-      this.next()
     })
 
     // stream end in dispatcher
@@ -42,7 +43,12 @@ module.exports = class musicManager extends EventEmitter {
 
     // if autoPlay, start when song ends
     if (this.options.autoPlay) {
-      this.on('song end', () => this.start())
+      this.on('song end', () => {
+        this.next()
+        if (this.queue[0]) {
+          this.start()
+        }
+      })
     }
   }
 
@@ -66,6 +72,9 @@ module.exports = class musicManager extends EventEmitter {
 
   addSong(song, index = this.queue.length) {
     this.queue.splice(index, 0, song)
+    if (this.options.autoPlay && this.queue[0] === song) {
+      this.start()
+    }
   }
 
   next(amount = 1) {
@@ -85,18 +94,39 @@ module.exports = class musicManager extends EventEmitter {
     this.emit('start', song)
     const stream = song.getStream()
     const dispatcher = this._connection.playStream(stream)
+    dispatcher.setVolume(this.options.volume)
     stream.on('error', (err) => {
       dispatcher.end() // manually end dispatcher to avoid interference with a possible next stream
       log(`${ this._connection.channel.guild.name }:encountered error on stream`, err)
     })
     this.bind(dispatcher)
-    song.commandChannel.sendMessage(`started playing ${ song.title }`)
+    song.commandChannel.sendMessage(nowPlaying(song.title))
   }
 
   stop() {
     if (this._boundDispatcher) {
-      this.emit('stop')
       this._boundDispatcher.end()
+    }
+  }
+
+  setVolume(volume) {
+    this.options.volume = volume
+    if (this._boundDispatcher) {
+      this._boundDispatcher.setVolume(volume)
+    }
+  }
+
+  setVolumeLog(volume) {
+    this.options.volume = Math.pow(volume, 1.660964)
+    if (this._boundDispatcher) {
+      this._boundDispatcher.setVolumeLogarithmic(volume)
+    }
+  }
+
+  setVolumeDecibels(volume) {
+    this.options.volume = Math.pow(10, volume / 20);
+    if (this._boundDispatcher) {
+      this._boundDispatcher.setVolumeDecibels(volume)
     }
   }
 }

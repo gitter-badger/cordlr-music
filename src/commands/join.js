@@ -8,7 +8,7 @@ module.exports = {
   run(message) {
     const voiceChannel = message.guild.channels
     .findAll('type', 'voice')
-    .find((elem) => elem.members.exists((value) => value.user.equals(message.author)))
+    .find(elem => elem.members.exists(value => value.user.equals(message.author)))
     log(`joining ${ voiceChannel.guild.name }:${ voiceChannel.name }`)
     return voiceChannel.join()
       .then((connection) => {

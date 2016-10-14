@@ -1,3 +1,5 @@
+const { notInVoiceChannel } = require('../messages')
+
 module.exports = {
   name: 'start',
   usage: 'start',
@@ -5,7 +7,7 @@ module.exports = {
   run(message) {
     const connection = message.guild.voiceConnection
     if (!connection) {
-      message.reply('I\'m not connected to a voice channel')
+      message.reply(notInVoiceChannel())
     }
     connection.musicManager.start()
   }
