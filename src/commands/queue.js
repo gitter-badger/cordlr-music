@@ -1,4 +1,3 @@
-const log = require('debug')('cordlr-music:command:queue')
 const { notInVoiceChannel } = require('../util/messages')
 
 module.exports = {
@@ -6,7 +5,6 @@ module.exports = {
   usage: 'queue <startAt>',
 
   run(message, args) {
-    log('queue:', args[1])
     if (!message.guild.voiceConnection) {
       return message.reply(notInVoiceChannel())
     }
