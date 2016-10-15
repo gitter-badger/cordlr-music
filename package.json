@@ -1,6 +1,6 @@
 {
-  "name": "cordlr-chordlr",
-  "version": "0.0.1",
+  "name": "cordlr-music",
+  "version": "0.1.0",
   "description": "A music plugin for cordlr",
   "main": "src/app.js",
   "scripts": {
