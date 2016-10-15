@@ -17,8 +17,8 @@ module.exports = function ytpl(pid, apiKey) {
         for (const item of json.items) {
           stream.write(item)
         }
-        if (res.nextPageToken) {
-          return callback(page(res.nextPageToken))
+        if (json.nextPageToken) {
+          return callback(page(json.nextPageToken))
         }
         stream.end()
       })

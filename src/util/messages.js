@@ -10,5 +10,6 @@ module.exports = {
   noArg: () => 'At least give me a hint to what you want',
   stopped: () => 'Went and shut it down',
   noPlaylistId: () => 'That url aint got no playlist in it yo',
-  startPlaylist: () => 'Imma get ur playlist right away!'
+  startPlaylist: () => 'Imma get ur playlist right away!',
+  errorPlSong: () => 'Darn i missed a song (probably because ****ing copyright)'
 }
