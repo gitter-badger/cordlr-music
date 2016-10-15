@@ -4,7 +4,7 @@ module.exports = {
   name: 'queue',
   usage: 'queue <startAt>',
 
-  run(message, args) {
+  run(message) {
     if (!message.guild.voiceConnection) {
       return message.reply(notInVoiceChannel())
     }
