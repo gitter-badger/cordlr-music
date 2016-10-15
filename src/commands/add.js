@@ -1,6 +1,6 @@
-const Song = require('../Song')
+const Song = require('../util/Song')
 const log = require('debug')('cordlr-music:command:add')
-const { addedSong, errorAddedSong } = require('../messages')
+const { addedSong, errorAddedSong } = require('../util/messages')
 
 module.exports = {
   name: 'add',

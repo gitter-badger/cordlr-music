@@ -1,6 +1,6 @@
 const commands = require('./commands')
 const log = require('debug')('cordlr-music:listener')
-const { noSuchCommand } = require('./messages')
+const { noSuchCommand } = require('./util/messages')
 
 module.exports = function musicListener(message, args) {
   log(`received message: '${ message.content }'`)

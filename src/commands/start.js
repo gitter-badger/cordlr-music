@@ -1,4 +1,4 @@
-const { notInVoiceChannel } = require('../messages')
+const { notInVoiceChannel } = require('../util/messages')
 
 module.exports = {
   name: 'start',

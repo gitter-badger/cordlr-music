@@ -25,6 +25,8 @@
   "homepage": "https://github.com/mees-/chordlr#readme",
   "dependencies": {
     "debug": "^2.2.0",
+    "request": "^2.75.0",
+    "request-promise-native": "^1.0.3",
     "ytdl-core": "^0.7.18"
   },
   "devDependencies": {

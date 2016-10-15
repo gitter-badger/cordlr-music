@@ -1,4 +1,4 @@
-const { pausedSong } = require('../messages')
+const { pausedSong } = require('../util/messages')
 
 module.exports = {
   name: 'pause',

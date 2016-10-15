@@ -8,5 +8,7 @@ module.exports = {
   noSuchCommand: () => 'I aint got that command (yet...)',
   changeVolume: () => 'Too loud? too quiet? whatevs 😴',
   noArg: () => 'At least give me a hint to what you want',
-  stopped: () => 'Went and shut it down'
+  stopped: () => 'Went and shut it down',
+  noPlaylistId: () => 'That url aint got no playlist in it yo',
+  startPlaylist: () => 'Imma get ur playlist right away!'
 }

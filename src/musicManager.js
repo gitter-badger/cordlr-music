@@ -1,22 +1,23 @@
 const EventEmitter = require('events')
 const log = require('debug')('cordlr-music:musicManager')
-const { nowPlaying } = require('./messages')
+const { nowPlaying } = require('./util/messages')
 
 const defaultOptions = {
-  maxHistory: 100,
+  maxHistory: 50,
   autoPlay: true,
-  volume: 1
+  volume: 0.5 // most songs are too loud so set it to half by default
 }
 
 module.exports = class musicManager extends EventEmitter {
-  constructor(connection, { maxHistory, autoPlay } = defaultOptions) {
+  constructor(connection, { maxHistory, autoPlay, volume } = defaultOptions) {
     // init super
     super()
     // store the arguments
     this._connection = connection
     this.options = {
       maxHistory,
-      autoPlay
+      autoPlay,
+      volume
     }
 
     // set interal properties
@@ -123,8 +124,8 @@ module.exports = class musicManager extends EventEmitter {
     }
   }
 
-  setVolumeDecibels(volume) {
-    this.options.volume = Math.pow(10, volume / 20);
+  setVolumeDb(volume) {
+    this.options.volume = Math.pow(10, volume / 20)
     if (this._boundDispatcher) {
       this._boundDispatcher.setVolumeDecibels(volume)
     }

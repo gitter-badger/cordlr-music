@@ -1,11 +1,11 @@
-const { notInVoiceChannel } = require('../messages')
+const { notInVoiceChannel } = require('../util/messages')
 
 module.exports = {
   name: 'skip',
   usage: 'skip [<amount>]',
 
   run(message, args) {
-    if (!message.guild.voiceChannel) {
+    if (!message.guild.voiceConnection) {
       return message.reply(notInVoiceChannel())
     }
 
