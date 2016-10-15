@@ -11,5 +11,6 @@ module.exports = {
   stopped: () => 'Went and shut it down',
   noPlaylistId: () => 'That url aint got no playlist in it yo',
   startPlaylist: () => 'Imma get ur playlist right away!',
-  errorPlSong: () => 'Darn i missed a song (probably because ****ing copyright)'
+  errorPlSong: () => 'Darn i missed a song (probably because ****ing copyright)',
+  userNotInVoice: () => 'R U tryna trick me? you\'re not even in a voice channel'
 }

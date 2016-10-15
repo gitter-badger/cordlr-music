@@ -1,13 +1,11 @@
-const { notInVoiceChannel } = require('../util/messages')
+const testVoice = require('../util/testVoice')
 
 module.exports = {
   name: 'queue',
   usage: 'queue <startAt>',
 
   run(message) {
-    if (!message.guild.voiceConnection) {
-      return message.reply(notInVoiceChannel())
-    }
+    if (!testVoice(message)) return
     const queueArr = formatQueue(message.guild.voiceConnection.musicManager.queue)
     message.reply(queueArr, { split: true })
   }

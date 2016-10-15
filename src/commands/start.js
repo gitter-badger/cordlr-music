@@ -1,14 +1,11 @@
-const { notInVoiceChannel } = require('../util/messages')
+const testVoice = require('../util/testVoice')
 
 module.exports = {
   name: 'start',
   usage: 'start',
 
   run(message) {
-    const connection = message.guild.voiceConnection
-    if (!connection) {
-      message.reply(notInVoiceChannel())
-    }
-    connection.musicManager.start()
+    if (!testVoice(message)) return
+    message.guild.voiceConnection.musicManager.start()
   }
 }

@@ -79,7 +79,7 @@ module.exports = class musicManager extends EventEmitter {
   }
 
   next(amount = 1) {
-    this.stop()
+    this.forceStop()
     for (let i = 0; i < amount; i++) {
       log(`${ this._connection.channel.guild.name }:next`)
       this.history.unshift(this.queue.shift())
@@ -108,6 +108,13 @@ module.exports = class musicManager extends EventEmitter {
     if (this._boundDispatcher) {
       this._boundDispatcher.end()
     }
+  }
+
+  forceStop() {
+    const old = this.options.autoPlay
+    this.options.autoPlay = false
+    this.stop()
+    this.options.autoPlay = old
   }
 
   setVolume(volume) {

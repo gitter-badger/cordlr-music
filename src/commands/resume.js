@@ -1,15 +1,12 @@
-const { resumed, notInVoiceChannel } = require('../util/messages')
-
+const { resumed } = require('../util/messages')
+const testVoice = require('../util/testVoice')
 module.exports = {
   name: 'resume',
   usage: 'resume',
 
   run(message) {
-    if (message.guild.voiceConnection) {
-      message.guild.voiceConnection.musicManager.resume()
-      message.reply(resumed())
-    } else {
-      message.reply(notInVoiceChannel())
-    }
+    if (!testVoice(message)) return
+    message.guild.voiceConnection.musicManager.resume()
+    message.reply(resumed())
   }
 }

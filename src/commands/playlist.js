@@ -1,17 +1,16 @@
-const { notInVoiceChannel, noArg, noPlaylistId, startPlaylist, errorPlSong } = require('../util/messages')
+const { noArg, noPlaylistId, startPlaylist, errorPlSong } = require('../util/messages')
 const Song = require('../util/Song')
 const ytpl = require('../util/ytpl')
 const log = require('debug')('cordlr-music:command:playlist')
+const testVoice = require('../util/testVoice')
 
 module.exports = {
   name: 'playlist',
   usage: 'playlist <playlist url>',
 
   run(message, args) {
-    const API_KEY = 'AIzaSyA_4QxnbeGYLhfJ8Y7GWJuJmdASSXmkUfM'
-    if (!message.guild.voiceConnection) {
-      return message.reply(notInVoiceChannel())
-    }
+    const API_KEY = 'AIzaSyBUCT0piaZuI6W6dCvXt4LdWoQ4vMmCwZY'
+    if (!testVoice(message)) return
     if (!args[1]) {
       return message.reply(noArg())
     }

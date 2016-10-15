@@ -1,5 +1,5 @@
 const ytdl = require('ytdl-core')
-const log = require('debug')('cordlr-music:')
+const log = require('debug')('cordlr-music:Song')
 
 module.exports = class Song {
   constructor(url, info, addedBy, commandChannel) {

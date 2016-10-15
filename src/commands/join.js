@@ -1,5 +1,6 @@
 const MusicManager = require('../musicManager')
 const log = require('debug')('cordlr-music:command:join')
+const { userNotInVoice } = require('../util/messages')
 
 module.exports = {
   name: 'join',
@@ -9,6 +10,9 @@ module.exports = {
     const voiceChannel = message.guild.channels
     .findAll('type', 'voice')
     .find(elem => elem.members.exists(value => value.user.equals(message.author)))
+    if (!voiceChannel) {
+      return message.reply(userNotInVoice())
+    }
     log(`joining ${ voiceChannel.guild.name }:${ voiceChannel.name }`)
     return voiceChannel.join()
       .then((connection) => {
