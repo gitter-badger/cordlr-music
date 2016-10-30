@@ -7,9 +7,7 @@ module.exports = {
   usage: 'join <channel name> (if none is specified, join person who issued command)',
 
   run(message) {
-    const voiceChannel = message.guild.channels
-    .findAll('type', 'voice')
-    .find(elem => elem.members.exists(value => value.user.equals(message.author)))
+    const voiceChannel = message.member.voiceChannel
     if (!voiceChannel) {
       return message.reply(userNotInVoice())
     }
