@@ -8,9 +8,7 @@ module.exports = {
   run(message, args) {
     if (!testVoice(message)) return
     log('before:', args[1])
-    if (!args[1]) {
-      args[1] = 1
-    }
+    if (!args[1]) args[1] = 1
     log('after', args[1])
 
     message.guild.voiceConnection.musicManager.next(args[1])

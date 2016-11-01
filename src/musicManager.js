@@ -82,7 +82,9 @@ module.exports = class musicManager extends EventEmitter {
     this.forceStop()
     for (let i = 0; i < amount; i++) {
       log(`${ this._connection.channel.guild.name }:next`)
-      this.history.unshift(this.queue.shift())
+      if (this.queue[0]) {
+        this.history.unshift(this.queue.shift())
+      }
     }
   }
 
