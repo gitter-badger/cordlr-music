@@ -1,5 +1,6 @@
 const { noArg, changeVolume } = require('../util/messages')
 const testVoice = require('../util/testVoice')
+const log = require('debug')('corldlr-music:command:volume')
 
 module.exports = {
   name: 'volume',
@@ -12,6 +13,10 @@ module.exports = {
       return
     }
     const newVolume = args[1] / 100
+    log(`setting volume to ${ newVolume }% with setting ${ args[2] ? args[2] : 'log' }`)
+    if (newVolume >= 300) {
+      log('Not allowing volumes over 300, people hate it.')
+    }
     switch (args[2]) {
       case 'db':
         message.guild.voiceConnection.musicManager.setVolumeDb(newVolume)

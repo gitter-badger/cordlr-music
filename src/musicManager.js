@@ -31,11 +31,6 @@ module.exports = class musicManager extends EventEmitter {
   init() {
     log(`${ this._connection.channel.guild.name }  init`)
 
-    // song end
-    this.on('song end', () => {
-      log(`${ this._connection.channel.guild.name }:song end:${ this.queue[0].title }`)
-    })
-
     // stream end in dispatcher
     this.on('dispatcher end', () => {
       this._boundDispatcher = null
@@ -92,7 +87,7 @@ module.exports = class musicManager extends EventEmitter {
     const song = this.queue[0]
     log(`${ this._connection.channel.guild.name }:start ${ song.title }`)
     if (this._boundDispatcher) {
-      this.stop()
+      this.forceStop()
     }
     this.emit('start', song)
     const stream = song.getStream()
